@@ -1,6 +1,6 @@
 <template>
   <div class='app'>
-    
+    <button @click="makeMeme">Meme</button>
     <!-- Search Bar -->
     <div class="search">
         <input 
@@ -18,21 +18,20 @@
         class='suggestions' 
         v-for="fill in autofill" 
         :key='fill.id'    
-        @click='makeMeme(fill.image)'>
+        @click='selectImage(fill.image)'>
           <img id="art" :src='fill.image'> 
-          <p>{{fill.name}}</p>
+          <p id="songname">{{fill.name}}</p>
         </div>
       </div>
     </div>
 
   <!-- Content -->
   <div class="content">
-    <div class='canvas-container' :class="{hide : !hidden}">           
-      <canvas id="my_canvas" width=300 height=300></canvas>
-
+    <div class='image-container' :class="{hide : !hidden}">           
+      <canvas id="my_canvas" height="400" width="235"></canvas>
     </div>
     
-    <div :class="{hide: hidden}" class="image-container">
+    <div class="image-container" :class="{hide: hidden}" >
       <img  id='meme' src="./assets/meme1.jpg">
     </div>
   </div>
@@ -50,11 +49,15 @@ export default {
       data: {},
       autofill: [],
       hidden: false,
-      firstImage: null,
-      secondImage: null
+      firstImage: '',
+      secondImage: "",
+      total: 1
     }
   },
   methods: {
+    log(){
+      console.log("log")
+    },
     //fetch data and store it
     funk(){
       this.feedback = false
@@ -85,17 +88,37 @@ export default {
         return el
       }
     },
+    selectImage(album_art){
+      if(this.total == 1){
+        this.firstImage = album_art
+        this.total++
+        console.log("first Image")
+        console.log(this.firstImage)
+        this.autofill = []
+        this.query = null
+      }else{
+        this.secondImage = album_art
+        console.log("second Image")
+        this.autofill = []
+        this.query = null
+        this.makeMeme()
+      }
+    },
     //Make a fucken meme g
-    makeMeme(album_art){
-      this.hidden = true
-      var my_canvas = document.getElementById("my_canvas")
-      var context = my_canvas.getContext("2d")
-      var meme = document.getElementById("meme")
-      var art = new Image()
-      art.src = album_art
-      context.drawImage(meme, 0, 0, 300, 300)
-      context.drawImage(art, 132.7, 180, 90, 75)
-      this.autofill = []
+    makeMeme(){
+      console.log("hello")
+        this.hidden = true
+        var my_canvas = document.getElementById("my_canvas")
+        var context = my_canvas.getContext("2d")
+        var meme = document.getElementById("meme")
+        var imageOne = new Image()
+        var imageTwo = new Image()
+        imageOne.src = this.firstImage
+        imageTwo.src = this.secondImage
+        context.drawImage(meme, 0, 0, 235, 400 )
+        context.drawImage(imageOne, 100, 100, 140, 100)
+        context.drawImage(imageTwo, 100, 100, 100, 100)
+        this.autofill = []
     }
   }
 }
@@ -105,7 +128,7 @@ export default {
 
 .content{
   display: flex;
-  margin-top: 10%;
+  margin: 15px;
 }
 
 .serach-items{
@@ -124,11 +147,10 @@ export default {
 
 .suggestions-container{
   display: inline-block;
-  z-index: 99;
 }
 
 .suggestions:nth-child(even){
-  background-color: #c0c0c0
+  background-color: #e0e0e0
 }
 
 .suggestions:nth-child(odd){
@@ -137,38 +159,33 @@ export default {
 
 .suggestions{
   display: flex;
-  z-index: 99;
   padding: 3px;
 }
 
 #art{
-  width: 7vw;
-  height: 7vh;
+  opacity: 1;
+  width: auto;
+  height: 75px;
+  transition: 0.2s;
 }
 
 #art:hover{
-  border: 3px solid blue;
-}
-
-.image-container{
-  margin: auto;
-  position: fixed;
+  opacity: 0.6;
+  transition: 0.2s
 }
 
 #meme{
-  width: 70vw;
+  height: 400;
+  width: 235;
   display: block;
   margin-left: auto;
   margin-right: auto;
   border: 2px solid black;
 }
 
-.canvas-container{
-  margin: auto;
-}
-
 #my_canvas{
-  width: 70vw;
+  height: 400;
+  width: 235;
   display: block;
   margin-left: auto;
   margin-right: auto;
