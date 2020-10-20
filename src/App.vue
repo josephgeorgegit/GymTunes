@@ -2,6 +2,16 @@
   <div class='app'>
     <button @click="makeMeme">Meme</button>
     <!-- Search Bar -->
+    <div class="choices">
+      <div class="choiceone">
+        <p v-if="choice">{{firstImage.name}}</p>
+        <img v-if="choice" id="art" :src='firstImage.image'> 
+      </div>
+      <div class="choiceone">
+        <p v-if="choicetwo">{{secondImage.name}}</p>
+        <img v-if="choicetwo" id="art" :src='secondImage.image'> 
+      </div>
+    </div>
     <div class="search">
         <input 
         v-model='query'
@@ -18,7 +28,7 @@
         class='suggestions' 
         v-for="fill in autofill" 
         :key='fill.id'    
-        @click='selectImage(fill.image)'>
+        @click='selectImage(fill)'>
           <img id="art" :src='fill.image'> 
           <p id="songname">{{fill.name}}</p>
         </div>
@@ -28,7 +38,7 @@
   <!-- Content -->
   <div class="content">
     <div class='image-container' :class="{hide : !hidden}">           
-      <canvas id="my_canvas" height="400" width="235"></canvas>
+      <canvas id="my_canvas" height=500 width=350 ></canvas>
     </div>
     
     <div class="image-container" :class="{hide: hidden}" >
@@ -51,7 +61,9 @@ export default {
       hidden: false,
       firstImage: '',
       secondImage: "",
-      total: 1
+      total: 1,
+      choice: false,
+      choicetwo: false
     }
   },
   methods: {
@@ -93,31 +105,34 @@ export default {
         this.firstImage = album_art
         this.total++
         console.log("first Image")
-        console.log(this.firstImage)
         this.autofill = []
         this.query = null
+        this.choice = true
       }else{
         this.secondImage = album_art
         console.log("second Image")
         this.autofill = []
         this.query = null
-        this.makeMeme()
+        this.choicetwo = true
       }
     },
     //Make a fucken meme g
     makeMeme(){
+      this.choice = false
+      this.choicetwo = false
       console.log("hello")
         this.hidden = true
         var my_canvas = document.getElementById("my_canvas")
         var context = my_canvas.getContext("2d")
         var meme = document.getElementById("meme")
         var imageOne = new Image()
+        imageOne.style.height = "50vh"
         var imageTwo = new Image()
-        imageOne.src = this.firstImage
-        imageTwo.src = this.secondImage
-        context.drawImage(meme, 0, 0, 235, 400 )
-        context.drawImage(imageOne, 100, 100, 140, 100)
-        context.drawImage(imageTwo, 100, 100, 100, 100)
+        imageOne.src = this.firstImage.image
+        imageTwo.src = this.secondImage.image
+        context.drawImage(meme, 0, 0, 350, 500 )
+        context.drawImage(imageOne, -10, 380, 115, 115)
+        context.drawImage(imageTwo, 155, 305, 110, 110)
         this.autofill = []
     }
   }
@@ -175,8 +190,8 @@ export default {
 }
 
 #meme{
-  height: 400;
-  width: 235;
+  height: 500px;
+  width: 350px;
   display: block;
   margin-left: auto;
   margin-right: auto;
