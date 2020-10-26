@@ -1,36 +1,48 @@
 <template>
   <div class='app'>
-    <button @click="makeMeme">Meme</button>
-    <!-- Search Bar -->
-    <div class="choices">
-      <div class="choiceone">
-        <p v-if="choice">{{firstImage.name}}</p>
-        <img v-if="choice" id="art" :src='firstImage.image'> 
-      </div>
-      <div class="choiceone">
-        <p v-if="choicetwo">{{secondImage.name}}</p>
-        <img v-if="choicetwo" id="art" :src='secondImage.image'> 
-      </div>
-    </div>
-    <div class="search">
-        <input 
-        v-model='query'
-        @keypress="funk" 
-        type="text"
-        placeholder="Enter Album Name">
-        <button  @click="funk">Search</button>
-    </div>
+    <div v-if="!showfinal">
+      <button v-if="twoImages" @click="makeMeme">Meme</button>
+      <p id="message" v-if="!twoImages">Select 2 of you biggest gym g-up albums, screenshot and share!</p>
 
-  <!-- Suggestions -->
-    <div class="suggestions-container" >
-      <div v-if="query != null">
-        <div 
-        class='suggestions' 
-        v-for="fill in autofill" 
-        :key='fill.id'    
-        @click='selectImage(fill)'>
-          <img id="art" :src='fill.image'> 
-          <p id="songname">{{fill.name}}</p>
+      <!-- Choices -->
+      <div class="choices">
+        <div v-if="choice" class="choiceone">
+          <img  id="art" :src='firstImage.image'> 
+          <p>{{firstImage.name}}</p>
+        </div>
+        
+        <div v-if="choicetwo" class="choiceone">
+          <img  id="art" :src='secondImage.image'> 
+          <p >{{secondImage.name}}</p>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search">
+          <input 
+          v-model='query'
+          @keypress="funk" 
+          type="text"
+          placeholder="Enter Album Name">
+          <button  @click="funk">Search</button>
+      </div>
+
+    <!-- Suggestions -->
+      <div class="suggestions-container" >
+        <div v-if="query != null">
+          <div 
+          class='suggestions' 
+          v-for="fill in autofill" 
+          :key='fill.id'    
+          @click='selectImage(fill)'>
+          <div>
+            <img id="art" :src='fill.image'> 
+          </div>
+            <div>
+              <p id="songname">{{fill.name}}</p>
+              <p id="artistname">{{fill.artist}}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +54,7 @@
     </div>
     
     <div class="image-container" :class="{hide: hidden}" >
-      <img  id='meme' src="./assets/meme1.jpg">
+      <img  id='meme' src="./assets/meme.png">
     </div>
   </div>
 </div>
@@ -63,7 +75,9 @@ export default {
       secondImage: "",
       total: 1,
       choice: false,
-      choicetwo: false
+      choicetwo: false,
+      twoImages: false,
+      showfinal: false
     }
   },
   methods: {
@@ -89,6 +103,7 @@ export default {
           this.autofill.push({
             "image" : this.data.results.albummatches.album[i].image[2]["#text"],
             "name": this.shortenResult(this.data.results.albummatches.album[i].name),
+            "artist": this.shortenResult(this.data.results.albummatches.album[i].artist),
             "id": i })
           }
     },
@@ -114,6 +129,7 @@ export default {
         this.autofill = []
         this.query = null
         this.choicetwo = true
+        this.twoImages = true
       }
     },
     //Make a fucken meme g
@@ -131,9 +147,10 @@ export default {
         imageOne.src = this.firstImage.image
         imageTwo.src = this.secondImage.image
         context.drawImage(meme, 0, 0, 350, 500 )
-        context.drawImage(imageOne, -10, 380, 115, 115)
-        context.drawImage(imageTwo, 155, 305, 110, 110)
+        context.drawImage(imageOne, 0, 370, 115, 115)
+        context.drawImage(imageTwo, 168, 305, 100, 100)
         this.autofill = []
+        this.showfinal = true
     }
   }
 }
@@ -141,9 +158,23 @@ export default {
 
 <style>
 
+.choices div{
+  display: flex;
+}
+
+#artistname{
+  opacity: 0.6
+}
+
+#message{
+  text-align: center;
+}
+
+.app{
+  max-width: 100vw
+}
 .content{
   display: flex;
-  margin: 15px;
 }
 
 .serach-items{
@@ -169,12 +200,24 @@ export default {
 }
 
 .suggestions:nth-child(odd){
-  background-color: #a0a0a0
+  background-color: #d0d0d0
 }
 
 .suggestions{
+  padding: 4px;
   display: flex;
-  padding: 3px;
+  margin: 1px;
+  min-width: 85vw;
+  transition: 0.2s;
+}
+.suggestions:hover{
+  opacity: 0.6;
+  transition: 0.2s;
+}
+
+.image-container{
+  margin: auto;
+  margin-top: 10px;
 }
 
 #art{
@@ -193,8 +236,6 @@ export default {
   height: 500px;
   width: 350px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
   border: 2px solid black;
 }
 
