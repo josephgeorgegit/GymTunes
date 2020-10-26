@@ -1,24 +1,10 @@
 <template>
   <div class='app'>
     <div v-if="!showfinal">
-      <button v-if="twoImages" @click="makeMeme">Meme</button>
-      <p id="message" v-if="!twoImages">Select 2 of you biggest gym g-up albums, screenshot and share!</p>
-
-      <!-- Choices -->
-      <div class="choices">
-        <div v-if="choice" class="choiceone">
-          <img  id="art" :src='firstImage.image'> 
-          <p>{{firstImage.name}}</p>
-        </div>
-        
-        <div v-if="choicetwo" class="choiceone">
-          <img  id="art" :src='secondImage.image'> 
-          <p >{{secondImage.name}}</p>
-        </div>
-      </div>
+      <p id="message" v-if="!twoImages">Whats your pre-workut music? Select 2 albums, screenshot and share!</p>
 
       <!-- Search Bar -->
-      <div class="search">
+      <div v-if="!twoImages" class="search">
           <input 
           v-model='query'
           @keypress="funk" 
@@ -38,15 +24,33 @@
           <div>
             <img id="art" :src='fill.image'> 
           </div>
-            <div>
+            <div class="songinfo">
               <p id="songname">{{fill.name}}</p>
               <p id="artistname">{{fill.artist}}</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
+
+    <!-- Choices -->
+      <div class="choices">
+        <div v-if="choice" class="choiceone">
+          <img  id="art" :src='firstImage.image'> 
+          <p>{{firstImage.name}}</p>
+        </div>
+        
+        <div v-if="choicetwo" class="choiceone">
+          <img  id="art" :src='secondImage.image'> 
+          <p >{{secondImage.name}}</p>
+        </div>
+      </div>
+
+    <!-- meme button -->
+      <div v-if="twoImages" class="memebutton">
+        <button id="memebutton" v-if="twoImages" @click="makeMeme">Make Meme</button>
+      </div>
+    </div>
   <!-- Content -->
   <div class="content">
     <div class='image-container' :class="{hide : !hidden}">           
@@ -56,6 +60,16 @@
     <div class="image-container" :class="{hide: hidden}" >
       <img  id='meme' src="./assets/meme.png">
     </div>
+  </div>
+
+  <!-- Built With -->
+  <div v-if="!showfinal" class="builtwith">
+    <p>Built with Vue.js and Last.fm</p>
+  </div>
+
+  <!-- Shameless Plug -->
+  <div class="plug" v-if="showfinal">
+    <p>Screenshot, share & follow <a href="https://instagram.com/youssoundgood">@youssoundgood</a> on instagram</p>
   </div>
 </div>
 </template>
@@ -157,9 +171,44 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap");
 
-.choices div{
+div .memebutton{
+  text-align: center;
+}
+
+button{
+  background-color: #f0f0f0; /* Green */
+  border: 1px #a0a0a0 solid;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  width: 25vw;
+  padding: 2px;
+}
+
+input{
+  border: 1px #a0a0a0 solid;
+  border-radius: 0%;
+  width: 65vw;
+  margin: 4;
+  padding: 4px;
+}
+
+.songinfo{
+  margin-left: 4px;
+}
+.builtwith{
+  text-align: center;
+}
+
+.plug{
+  text-align: center;
+}
+
+.choices{
   display: flex;
+  justify-content:space-evenly;
 }
 
 #artistname{
@@ -171,7 +220,8 @@ export default {
 }
 
 .app{
-  max-width: 100vw
+  max-width: 100vw;
+  font-family: 'Montserrat', sans-serif;
 }
 .content{
   display: flex;
@@ -253,16 +303,4 @@ export default {
   display: block;
   margin: 4px;
 }
-
-input{
-  width: 65vw;
-  margin: 4;
-  padding: 4px;
-}
-
-button{
-  width: 25vw;
-  padding: 3px;
-}
-
 </style>
