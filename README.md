@@ -1,4 +1,8 @@
-# lrmedia
+# PreWorkoutMeme
+Visit at preworkoutmeme.web.app
+Deplyed using Firebase Hosting
+Built with Vue
+Powered by Last.fm
 
 ## Project setup
 ```
