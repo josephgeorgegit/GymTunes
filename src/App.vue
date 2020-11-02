@@ -102,7 +102,7 @@ export default {
     funk(){
       this.feedback = false
       setTimeout(() => {
-        fetch(`${this.lastfm_url}?method=album.search&album=${this.query}}&limit=5&api_key=710afa9401c18d5c62a9259faf121bab&format=json`)
+        fetch(`${this.lastfm_url}?method=album.search&album=${this.query}}&limit=5&"xxx"&format=json`)
         .then( res => {
           return res.json()
         }).then(
