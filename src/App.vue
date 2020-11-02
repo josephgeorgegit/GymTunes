@@ -79,7 +79,6 @@ export default {
   name: 'App',
   data() {
     return{
-      api_key: '710afa9401c18d5c62a9259faf121bab',
       lastfm_url: 'https://ws.audioscrobbler.com/2.0/',
       query: null,
       data: {},
